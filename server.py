@@ -1,34 +1,21 @@
 import socket
+import threading
 import datetime
 
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-server_address = ('127.0.0.1', 12345)
-server_socket.bind(server_address)
-
-server_socket.listen(1)
-print("Сервер працює на {}:{}".format(*server_address))
-
-while True:
-    print("Чекаємо на з'єднання...")
-    client_socket, client_address = server_socket.accept()
-    print("З'єднання встановлено з {}".format(client_address))
-
-    received_data = []
+def handle_client(client_socket):
     while True:
         data = client_socket.recv(1024).decode('utf-8')
         if not data:
             break
 
-        received_data.append(data)
+
 
         current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        print("Отримано від клієнта: '{}'".format(data))
+        print("Отримано від клієнта {}: '{}'".format(client_socket.getpeername(), data))
         print("Час отримання: {}".format(current_time))
 
-        if data.lower() == 'exit':
-            break
-        
+
+
         import time
         time.sleep(5)
 
@@ -37,5 +24,20 @@ while True:
 
     client_socket.close()
 
-server_socket.close()
 
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+server_address = ('127.0.0.1', 12345)
+server_socket.bind(server_address)
+
+server_socket.listen(5)
+print("Сервер працює на {}:{}".format(*server_address))
+
+while True:
+    print("Чекаємо на з'єднання...")
+    client_socket, client_address = server_socket.accept()
+    print("З'єднання встановлено з {}".format(client_address))
+
+    # Створення окремого потоку для обробки клієнта
+    client_thread = threading.Thread(target=handle_client, args=(client_socket,))
+    client_thread.start()
