@@ -12,8 +12,11 @@ while True:
     if message.lower() == 'exit':
         break
 
-    
-    client_socket.send(message.encode('utf-8'))
 
+    client_socket.send(message.encode('utf-8'))
+    response = client_socket.recv(1024).decode('utf-8')
+
+    if response == "Дані успішно відправлено":
+        print("Дані успішно відправлені")
 
 client_socket.close()
