@@ -19,4 +19,7 @@ while True:
     if response == "Дані успішно відправлено":
         print("Дані успішно відправлені")
 
+    if message.lower() == 'exit':
+        break
+
 client_socket.close()
