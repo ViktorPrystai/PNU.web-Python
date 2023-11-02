@@ -173,7 +173,7 @@
         this.classList.add('filter-active');
 
         portfolioIsotope.arrange({
-          filter: this.getAttribute('data-filter')
+          filter: this.getAttribute('mydata-filter')
         });
         portfolioIsotope.on('arrangeComplete', function() {
           AOS.refresh()
