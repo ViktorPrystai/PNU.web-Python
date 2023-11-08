@@ -5,10 +5,22 @@
     <title>{% block title %} Base {% endblock %} - My Webpage</title>
     {% block css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     {% endblock %}
 </head>
 <body>
 {% include "navbar.html" %}
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="flash-{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</div>
 {% block body %}
 
 {% endblock %}
@@ -18,3 +30,7 @@
 {% endblock %}
 </body>
 </html>
+
+
+
+

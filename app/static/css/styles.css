@@ -1,0 +1,31 @@
+/* Style for the success category */
+.flash-success {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px;
+    border: 1px solid #4CAF50;
+}
+
+/* Style for the info category */
+.flash-info {
+    background-color: #2196F3;
+    color: #fff;
+    padding: 10px;
+    border: 1px solid #2196F3;
+}
+
+/* Style for the warning category */
+.flash-warning {
+    background-color: #FF9800;
+    color: #fff;
+    padding: 10px;
+    border: 1px solid #FF9800;
+}
+
+/* Style for the error category */
+.flash-danger {
+    background-color: #f44336;
+    color: #fff;
+    padding: 10px;
+    border: 1px solid #f44336;
+}

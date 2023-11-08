@@ -5,7 +5,7 @@ from app.data import posts
 from app import app, db
 import json
 
-from app.forms import FeedbackForm
+from app.forms import FeedbackForm, LoginForm
 from models import Feedback
 
 
@@ -16,22 +16,33 @@ def _get_credentials_filepath(filename="mydata/users.json",):
 with open(_get_credentials_filepath(), 'r') as f:
     users = json.load(f)
 
-@app.route('/login')
+
+
+@app.route('/login', methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    form = LoginForm()
 
-
-@app.route('/login/hi', methods=["GET", "POST"])
-def login_hi():
-    if request.method == "POST":
-        name = request.form.get("name")
-        password = request.form.get("password")
-
+    if form.validate_on_submit():
+        name = form.name.data
+        password = form.password.data
+        remember = bool(request.form.get("remember"))
 
         if name in users and users[name] == password:
             session["username"] = name
+            if remember:
+
+                session.permanent = True
+                app.permanent_session_lifetime = timedelta(days=730)
+            else:
+
+                app.permanent_session_lifetime = timedelta(minutes=30)
+            flash('Login successful', 'success')
             return redirect(url_for("info"))
-    return redirect(url_for("login"))
+        else:
+            flash('Invalid username or password', 'danger')
+            return redirect(url_for("login"))
+
+    return render_template("login.html", form=form)
 
 
 @app.route('/info', methods=["GET", "POST"])
