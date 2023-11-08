@@ -1,4 +1,4 @@
-import os 
+import os
 from datetime import datetime, timedelta
 from flask import render_template, request, redirect, url_for, session, make_response, flash
 from app.data import posts
@@ -10,7 +10,7 @@ from models import Feedback
 
 
 def _get_credentials_filepath(filename="mydata/users.json",):
-    parent_dir = os.path.abspath( os.path.dirname(__file__) )
+    parent_dir = os.path.abspath(os.path.dirname(__file__))
     filepath = os.path.join(parent_dir, filename)
     return filepath
 with open(_get_credentials_filepath(), 'r') as f:
@@ -38,15 +38,14 @@ def login_hi():
 def info():
     user = session.get('username')
 
+    user_cookies = request.cookies
     if user:
         if request.method == "POST":
 
-            pass
-
-        return render_template("info.html", username=user)
+            return render_template("info.html", username=user, user_cookies=user_cookies)
+        return render_template("info.html", username=user, user_cookies=user_cookies)
     else:
         return redirect(url_for("login"))
-
 
 @app.route('/logout', methods=["GET", "POST"])
 def logout():
@@ -86,10 +85,10 @@ def delete_cookie():
     user = session.get('username')
 
     if user:
-        key_to_delete = request.form.get('key_to_delete')
+        key_to_delete = request.form.get('delete_key')
 
         if key_to_delete:
-            # Create a new response to delete the specified cookie
+
             response = make_response(redirect(url_for("info")))
             response.delete_cookie(key_to_delete)
 
@@ -98,7 +97,7 @@ def delete_cookie():
             return "Error: Invalid input for deleting a cookie"
     else:
         return redirect(url_for("login"))
-    pass
+
 
 
 @app.route('/delete_all_cookies', methods=["POST"])

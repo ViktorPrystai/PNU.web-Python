@@ -36,6 +36,20 @@
         <button type="submit">Change Password</button>
     </form>
 
+<h2>Your Cookies</h2>
+    <table>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+        {% for key, value in user_cookies.items() %}
+            <tr>
+                <td>{{ key }}</td>
+                <td>{{ value }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
     <a href="/logout">Logout</a>
 </body>
 </html>
