@@ -1,12 +1,17 @@
 import os
 from datetime import datetime, timedelta
+
 from flask import render_template, request, redirect, url_for, session, make_response, flash
+
 from app.data import posts
 from app import app, db
 import json
 
-from app.forms import FeedbackForm, LoginForm, TodoForm
-from app.models import Feedback, Todo
+from app.forms import FeedbackForm, LoginForm, TodoForm, RegistrationForm
+from app.models import Feedback, Todo, User
+
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+app.config['SESSION_REFRESH_EACH_REQUEST'] = True
 
 
 def _get_credentials_filepath(filename="mydata/users.json",):
@@ -17,32 +22,68 @@ with open(_get_credentials_filepath(), 'r') as f:
     users = json.load(f)
 
 
+# @app.route('/login', methods=["GET", "POST"])
+# def login():
+#     form = LoginForm()
+#
+#     if form.validate_on_submit():
+#         name = form.name.data
+#         password = form.password.data
+#         remember = bool(request.form.get("remember"))
+#
+#         if name in users and users[name] == password:
+#             session["username"] = name
+#             if remember:
+#
+#                 session.permanent = True
+#                 app.permanent_session_lifetime = timedelta(days=730)
+#             else:
+#
+#                 app.permanent_session_lifetime = timedelta(minutes=30)
+#             flash('Login successful', 'success')
+#             return redirect(url_for("info"))
+#         else:
+#             flash('Invalid username or password', 'danger')
+#             return redirect(url_for("login"))
+#
+#     return render_template("login.html", form=form)
 
-@app.route('/login', methods=["GET", "POST"])
+#         hashed_password = generate_password_hash(form.password.data, method='sha256')
+#         new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+#         db.session.add(new_user)
+#         db.session.commit()
+#         flash('Your account has been created!', 'success')
+#         return redirect(url_for('login'))
+#     return render_template('register.html', title='Register', form=form)
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        try:
+            user = User(username=form.username.data, email=form.email.data, password=form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            flash(f'Account successfully created for {form.username.data}!', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            flash(f'An error occurred: {str(e)}', 'danger')
+            db.session.rollback()
+    return render_template('register.html', form=form)
+
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-
     if form.validate_on_submit():
-        name = form.name.data
-        password = form.password.data
-        remember = bool(request.form.get("remember"))
-
-        if name in users and users[name] == password:
-            session["username"] = name
-            if remember:
-
-                session.permanent = True
-                app.permanent_session_lifetime = timedelta(days=730)
-            else:
-
-                app.permanent_session_lifetime = timedelta(minutes=30)
-            flash('Login successful', 'success')
-            return redirect(url_for("info"))
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and user.verify_password(form.password.data):
+            # Log in the user (you may want to implement a proper login session management)
+            flash('Login successful!', 'success')
+            return redirect(url_for('users'))  # Replace 'index' with the actual route after login
         else:
-            flash('Invalid username or password', 'danger')
-            return redirect(url_for("login"))
+            flash('Login unsuccessful. Please check email and password.', 'danger')
+    return render_template('login.html', form=form)
 
-    return render_template("login.html", form=form)
 
 
 @app.route('/info', methods=["GET", "POST"])
@@ -229,3 +270,9 @@ def todo_delete(todo_id):
     db.session.delete(todo)
     db.session.commit()
     return redirect(url_for("todo"))
+
+@app.route('/users')
+def users():
+    users_list = User.query.all()
+    total_users = len(users_list)
+    return render_template('users.html', users_list=users_list, total_users=total_users)
