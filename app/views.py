@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timedelta
 
-from flask import render_template, request, redirect, url_for, session, make_response, flash, jsonify
+from flask import render_template, request, redirect, url_for, session, make_response, flash
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app.data import posts
@@ -15,12 +15,10 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 app.config['SESSION_REFRESH_EACH_REQUEST'] = True
 
 
-def _get_credentials_filepath(filename="mydata/users.json", ):
+def _get_credentials_filepath(filename="mydata/users.json",):
     parent_dir = os.path.abspath(os.path.dirname(__file__))
     filepath = os.path.join(parent_dir, filename)
     return filepath
-
-
 with open(_get_credentials_filepath(), 'r') as f:
     users = json.load(f)
 
@@ -76,7 +74,6 @@ def register():
             db.session.rollback()
     return render_template('register.html', form=form)
 
-
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -92,13 +89,11 @@ def login():
             flash('Login unsuccessful. Please check email and password.', 'danger')
     return render_template('login.html', form=form)
 
-
 @app.route("/logout")
 def logout():
     logout_user()
     flash('You have been logged out', 'success')
     return redirect(url_for('home'))
-
 
 @app.route('/info', methods=["GET", "POST"])
 def info():
@@ -107,16 +102,17 @@ def info():
     user_cookies = request.cookies
     if user:
         if request.method == "POST":
+
             return render_template("info.html", username=user, user_cookies=user_cookies)
         return render_template("info.html", username=user, user_cookies=user_cookies)
     else:
         return redirect(url_for("login"))
 
-
 # @app.route('/logout', methods=["GET", "POST"])
 # def logout():
 #     session.pop('username', None)
-#     return redirect(url_for("login")
+#     return redirect(url_for("login"))
+
 
 @app.route('/add_cookie', methods=["POST"])
 def add_cookie():
@@ -131,7 +127,9 @@ def add_cookie():
             expiration = int(expiration)
             expiration_time = datetime.now() + timedelta(seconds=expiration)
 
+
             response = make_response(redirect(url_for("info")))
+
 
             response.set_cookie(key, value, expires=expiration_time)
 
@@ -162,6 +160,7 @@ def delete_cookie():
         return redirect(url_for("login"))
 
 
+
 @app.route('/delete_all_cookies', methods=["POST"])
 def delete_all_cookies():
     user = session.get('username')
@@ -169,6 +168,7 @@ def delete_all_cookies():
     if user:
 
         response = make_response(redirect(url_for("info")))
+
 
         for key in request.cookies.keys():
             response.delete_cookie(key)
@@ -187,6 +187,7 @@ def change_password():
         new_password = request.form.get('new_password')
 
         if new_password:
+
             users[user] = new_password
             return redirect(url_for("info"))
 
@@ -199,7 +200,6 @@ def inject_data():
     user_agent = request.headers.get('User-Agent')
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return dict(os_name=os_name, user_agent=user_agent, current_time=current_time)
-
 
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
@@ -216,7 +216,6 @@ def feedback():
 
     feedbacks = Feedback.query.all()
     return render_template('feedback.html', form=form, feedbacks=feedbacks)
-
 
 @app.route('/delete_feedback/<int:feedback_id>', methods=['POST'])
 def delete_feedback(feedback_id):
@@ -248,8 +247,7 @@ def skill(idx=None):
     else:
         return render_template("skills.html", posts=posts)
 
-
-@app.route('/todo', methods=['POST', 'GET'])
+@app.route('/todo', methods=['POST','GET'])
 def todo():
     todo_list = Todo.query.all()
     form = TodoForm()
@@ -282,57 +280,9 @@ def todo_delete(todo_id):
     db.session.commit()
     return redirect(url_for("todo"))
 
-
 @app.route('/users')
 @login_required
 def users():
     users_list = User.query.all()
     total_users = len(users_list)
     return render_template('users.html', users_list=users_list, total_users=total_users)
-
-
-@app.route('/todos', methods=['GET'])
-def get_todos():
-    todos = Todo.query.all()
-    todo_list = [{'id': todo.id, 'title': todo.title, 'complete': todo.complete} for todo in todos]
-    return jsonify({'todos': todo_list})
-
-@app.route('/todos', methods=['POST'])
-def create_todo():
-    data = request.get_json()
-    new_todo = Todo(title=data['title'], complete=data.get('complete', False))
-    db.session.add(new_todo)
-    db.session.commit()
-    return jsonify({'id': new_todo.id, 'title': new_todo.title, 'complete': new_todo.complete}), 201
-
-
-@app.route('/todos/<int:todo_id>', methods=['GET'])
-def get_todo(todo_id):
-    todo = Todo.query.get(todo_id)
-    if todo:
-        return jsonify({'id': todo.id, 'title': todo.title, 'complete': todo.complete})
-    else:
-        return jsonify({'error': 'Todo not found'}), 404
-
-
-@app.route('/todos/<int:todo_id>', methods=['PUT'])
-def update_todo(todo_id):
-    todo = Todo.query.get(todo_id)
-    if not todo:
-        return jsonify({'error': 'Todo not found'}), 404
-
-    data = request.get_json()
-    todo.title = data.get('title', todo.title)
-    todo.complete = data.get('complete', todo.complete)
-    db.session.commit()
-    return jsonify({'id': todo.id, 'title': todo.title, 'complete': todo.complete})
-
-@app.route('/todos/<int:todo_id>', methods=['DELETE'])
-def delete_todo(todo_id):
-    todo = Todo.query.get(todo_id)
-    if not todo:
-        return jsonify({'error': 'Todo not found'}), 404
-
-    db.session.delete(todo)
-    db.session.commit()
-    return jsonify({'message': 'Todo deleted'})
