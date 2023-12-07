@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 from flask import render_template, request, redirect, url_for, session, make_response, flash
+from flask_login import login_user, current_user, logout_user, login_required
 
 from app.data import posts
 from app import app, db
@@ -58,6 +59,8 @@ with open(_get_credentials_filepath(), 'r') as f:
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         try:
@@ -65,7 +68,7 @@ def register():
             db.session.add(user)
             db.session.commit()
             flash(f'Account successfully created for {form.username.data}!', 'success')
-            return redirect(url_for('login'))
+            return redirect(url_for('home'))
         except Exception as e:
             flash(f'An error occurred: {str(e)}', 'danger')
             db.session.rollback()
@@ -73,18 +76,24 @@ def register():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('register'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.verify_password(form.password.data):
-            # Log in the user (you may want to implement a proper login session management)
+            login_user(user, remember=form.remember.data)
             flash('Login successful!', 'success')
-            return redirect(url_for('users'))  # Replace 'index' with the actual route after login
+            return redirect(url_for('users'))
         else:
             flash('Login unsuccessful. Please check email and password.', 'danger')
     return render_template('login.html', form=form)
 
-
+@app.route("/logout")
+def logout():
+    logout_user()
+    flash('You have been logged out', 'success')
+    return redirect(url_for('home'))
 
 @app.route('/info', methods=["GET", "POST"])
 def info():
@@ -99,10 +108,10 @@ def info():
     else:
         return redirect(url_for("login"))
 
-@app.route('/logout', methods=["GET", "POST"])
-def logout():
-    session.pop('username', None)
-    return redirect(url_for("login"))
+# @app.route('/logout', methods=["GET", "POST"])
+# def logout():
+#     session.pop('username', None)
+#     return redirect(url_for("login"))
 
 
 @app.route('/add_cookie', methods=["POST"])
@@ -272,6 +281,7 @@ def todo_delete(todo_id):
     return redirect(url_for("todo"))
 
 @app.route('/users')
+@login_required
 def users():
     users_list = User.query.all()
     total_users = len(users_list)

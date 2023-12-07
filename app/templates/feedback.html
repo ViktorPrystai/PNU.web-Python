@@ -1,39 +1,32 @@
 {% extends "base.html" %}
-{% block content %}
-    {% block body %}
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-  <h1>Залиште свій відгук</h1>
-  <form method="POST">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-      {{ form.name.label(class="form-control-label") }}
-      {{ form.name(class="form-control") }}
-    </div>
-    <div class="form-group">
-      {{ form.message.label(class="form-control-label") }}
-      {{ form.message(class="form-control") }}
-    </div>
-    {{ form.submit(class="btn btn-primary") }}
-  </form>
 
-  <h2>Всі відгуки</h2>
-  <ul>
-    {% for feedback in feedbacks %}
-      <li>{{ feedback.name }}: {{ feedback.message }}
-      <form method="POST" action="{{ url_for('delete_feedback', feedback_id=feedback.id) }}">
+{% block content %}
+    {% with messages = get_flashed_messages() %}
+    {% endwith %}
+
+    <h1>Залиште свій відгук</h1>
+    <form method="POST">
         {{ form.hidden_tag() }}
-        <button class="btn btn-danger">Видалити</button>
-      </form>
-      </li>
-    {% endfor %}
-  </ul>
-{% endblock %}
+        <div class="form-group">
+            {{ form.name.label(class="form-control-label") }}
+            {{ form.name(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.message.label(class="form-control-label") }}
+            {{ form.message(class="form-control") }}
+        </div>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+
+    <h2>Всі відгуки</h2>
+    <ul>
+        {% for feedback in feedbacks %}
+            <li>{{ feedback.name }}: {{ feedback.message }}
+                <form method="POST" action="{{ url_for('delete_feedback', feedback_id=feedback.id) }}">
+                    {{ form.hidden_tag() }}
+                    <button class="btn btn-danger">Видалити</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
