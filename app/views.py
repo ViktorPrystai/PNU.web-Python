@@ -1,15 +1,16 @@
+import json
 import os
 from datetime import datetime, timedelta
 
-from flask import render_template, request, redirect, url_for, session, make_response, flash
+from flask import render_template, redirect, url_for, session, make_response, flash, request
 from flask_login import login_user, current_user, logout_user, login_required
+from werkzeug.utils import secure_filename
 
-from app.data import posts
 from app import app, db
-import json
-
-from app.forms import FeedbackForm, LoginForm, TodoForm, RegistrationForm
+from app.data import posts
+from app.forms import FeedbackForm, LoginForm, TodoForm, RegistrationForm, UpdateAccountForm ,ChangePasswordForm
 from app.models import Feedback, Todo, User
+from PIL import Image
 
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 app.config['SESSION_REFRESH_EACH_REQUEST'] = True
@@ -179,19 +180,19 @@ def delete_all_cookies():
     pass
 
 
-@app.route('/change_password', methods=['POST'])
-def change_password():
-    user = session.get('username')
-
-    if user:
-        new_password = request.form.get('new_password')
-
-        if new_password:
-
-            users[user] = new_password
-            return redirect(url_for("info"))
-
-    return redirect(url_for("login"))
+# @app.route('/change_password', methods=['POST'])
+# def change_password():
+#     user = session.get('username')
+#
+#     if user:
+#         new_password = request.form.get('new_password')
+#
+#         if new_password:
+#
+#             users[user] = new_password
+#             return redirect(url_for("info"))
+#
+#     return redirect(url_for("login"))
 
 
 @app.context_processor
@@ -285,4 +286,71 @@ def todo_delete(todo_id):
 def users():
     users_list = User.query.all()
     total_users = len(users_list)
-    return render_template('users.html', users_list=users_list, total_users=total_users)
+    update_form = UpdateAccountForm()
+    change_password_form = ChangePasswordForm()
+    return render_template('users.html', users_list=users_list, total_users=total_users, update_form=update_form, change_password_form=change_password_form)
+
+
+
+@app.route('/update_users', methods=['GET', 'POST'])
+@login_required
+def update_users():
+    update_form = UpdateAccountForm()
+    change_password_form = ChangePasswordForm()
+
+
+    if update_form.validate_on_submit():
+        if 'profile_photo' in request.files:
+            profile_photo = request.files['profile_photo']
+            if profile_photo.filename != '':
+                 profile_photo_path = 'static/profile_photos/'
+                 new_filename = secure_filename(profile_photo.filename)
+                 # profile_photo.save(os.path.join(app.root_path ,profile_photo_path, new_filename))
+                 output_size = (200, 200)
+                 i = Image.open(profile_photo)
+                 i.thumbnail(output_size)
+                 i.save(os.path.join(app.root_path ,profile_photo_path, new_filename))
+                 current_user.image_file = new_filename
+        current_user.username = update_form.username.data
+        current_user.email = update_form.email.data
+        current_user.about_me = update_form.about_me.data
+        db.session.commit()
+
+        flash('Your account information has been updated successfully!', 'success')
+        return redirect(url_for('users'))
+
+    elif request.method == 'GET':
+        update_form.username.data = current_user.username
+        update_form.email.data = current_user.email
+        update_form.about_me.data = current_user.about_me
+
+    return render_template('users.html', update_form=update_form, change_password_form=change_password_form)
+
+@app.route('/change_password', methods=['POST'])
+def change_password():
+    form = ChangePasswordForm()
+
+    if form.validate_on_submit():
+        new_password = form.new_password.data
+        try:
+            current_user.set_password(new_password)
+            db.session.commit()
+            flash('Password updated successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash("Failed to update!", category="danger")
+
+        return redirect(url_for('users'))
+
+    return render_template('users.html', change_password_form=form, update_form=UpdateAccountForm())
+
+
+@app.after_request
+def after_request(response):
+    if current_user:
+        current_user.last_seen = datetime.now()
+        try:
+         db.session.commit()
+        except:
+         flash('Error while update user last seen!', 'danger')
+        return response
