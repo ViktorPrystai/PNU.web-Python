@@ -63,7 +63,7 @@
     <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
         <div style="width: 300px;">
             <h2 class="mb-4 text-center">Register</h2>
-            <form method="POST" novalidate action="{{ url_for('register') }}">
+            <form method="POST" novalidate action="{{ url_for('.register') }}">
                 {{ form.hidden_tag() }}
                 <div class="form-group">
                     <label for="username" class="form-control-label">Username</label>

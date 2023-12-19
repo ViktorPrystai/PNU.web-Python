@@ -1,27 +1,15 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, TextAreaField, SubmitField, PasswordField, BooleanField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Regexp
 from flask_login import current_user
-from app.models import User
-
-
-class FeedbackForm(FlaskForm):
-    name = StringField('Ім\'я', validators=[DataRequired()])
-    message = TextAreaField('Відгук', validators=[DataRequired()])
-    submit = SubmitField('Відправити')
-
+from .models import User
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=4, max=10)])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
-
-
-class TodoForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    submit = SubmitField('Save')
 
 class ChangePasswordForm(FlaskForm):
     current_password = PasswordField(label='Current Password', validators=[DataRequired(message="This field is required."), Length(min=6, message='Password must be more than 6 characters long')])

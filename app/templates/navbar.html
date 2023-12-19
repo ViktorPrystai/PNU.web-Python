@@ -4,19 +4,19 @@
     <div class="container d-flex justify-content-between align-items-center">
 
       <div id="logo">
-        <a href="home.html"><img src="" alt=""></a>
+        <a href="../portfolio/templates/portfolio/home.html"><img src="" alt=""></a>
       </div>
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="nav-link scrollto "href="{{ url_for('home') }}">Home</a></li>
-          <li><a class="nav-link scrollto "href="{{ url_for('about') }}">About</a></li>
-          <li><a class="nav-link scrollto "href="{{ url_for('login') }}">Log in</a></li>
-            <li><a class="nav-link scrollto "href="{{ url_for('register') }}">Register</a></li>
-            <li><a class="nav-link scrollto "href="{{ url_for('feedback') }}">Feedback Form</a></li>
-            <li><a class="nav-link scrollto "href="{{ url_for('todo') }}">Todo Form</a></li>
-          <li><a class="nav-link scrollto" href="{{ url_for('users') }}">My Profile</a></li>
-          <li><a class="nav-link scrollto" href="{{ url_for('logout') }}">Logout</a></li>
+          <li><a class="nav-link scrollto "href="{{ url_for('portfolio.home') }}">Home</a></li>
+          <li><a class="nav-link scrollto "href="{{ url_for('portfolio.about') }}">About</a></li>
+          <li><a class="nav-link scrollto "href="{{ url_for('auth.login') }}">Log in</a></li>
+            <li><a class="nav-link scrollto "href="{{ url_for('auth.register') }}">Register</a></li>
+            <li><a class="nav-link scrollto "href="{{ url_for('feedback.feedback') }}">Feedback Form</a></li>
+            <li><a class="nav-link scrollto "href="{{ url_for('todo.todo') }}">Todo Form</a></li>
+          <li><a class="nav-link scrollto" href="{{ url_for('auth.users') }}">My Profile</a></li>
+          <li><a class="nav-link scrollto" href="{{ url_for('auth.logout') }}">Logout</a></li>
           <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
               <li><a href="#">Drop Down 1</a></li>
@@ -34,7 +34,7 @@
               <li><a href="#">Drop Down 4</a></li>
             </ul>
           </li>
-          <li><a class="nav-link scrollto" href="{{ url_for('skill') }}">My skills</a></li>
+          <li><a class="nav-link scrollto" href="{{ url_for('portfolio.skill') }}">My skills</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->

@@ -7,16 +7,6 @@ from datetime import datetime
 def user_loader(user_id):
     return User.query.get(int(user_id))
 
-class Feedback(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    message = db.Column(db.Text, nullable=False)
-
-class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    complete = db.Column(db.Boolean, default=False)
-
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -25,6 +15,10 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(128))
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.now())
+
+    @property
+    def image_filepath(self):
+        return "profile_photos/" + self.image_file
 
 
     def __init__(self, username, email, password):
@@ -36,6 +30,3 @@ class User(db.Model, UserMixin):
         self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     def verify_password(self, pwd):
         return bcrypt.checkpw(pwd.encode('utf-8'), self.password.encode('utf-8'))
-
-
-

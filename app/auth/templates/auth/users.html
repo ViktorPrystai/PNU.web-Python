@@ -5,7 +5,7 @@
     <h2 class="mb-4">Account Information</h2>
 
     <div>
-        <img src="{{ url_for('static', filename='profile_photos/' + current_user.image_file) }}" alt="Фото профілю">
+        <img src="{{ url_for('.static', filename=current_user.image_filepath) }}" alt="Фото профілю">
         <p>Username: {{ current_user.username }}</p>
         <p>Email: {{ current_user.email }}</p>
 
@@ -19,7 +19,7 @@
 </div>
 <div style="max-width: 60%;">
     <div>
-        <form method="post" action="{{ url_for('change_password') }}" id="change_password_form" novalidate>
+        <form method="post" action="{{ url_for('.change_password') }}" id="change_password_form" novalidate>
             {{ change_password_form.csrf_token }}
                 {{ render_field(change_password_form.current_password)}}
                 {{ render_field(change_password_form.new_password)}}
@@ -30,7 +30,7 @@
 </div>
 
         <h3 class="mt-4">Update profile information</h3>
-        <form method="POST" action="{{ url_for('update_users') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ url_for('.update_users') }}" enctype="multipart/form-data">
             {{ update_form.hidden_tag() }}
             <div class="form-group">
                 {{ update_form.username.label(class="form-label") }}
