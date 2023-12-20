@@ -1,7 +1,7 @@
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, Blueprint
 from flask_login import LoginManager
 from config import config
 
@@ -26,6 +26,9 @@ def create_app(config_name="default"):
     login_manager.login_message_category = 'info'
 
     with app.app_context():
+
+        api = Blueprint("api", __name__, url_prefix="/api")
+
         from .auth import auth_blueprint
         app.register_blueprint(auth_blueprint)
 
@@ -40,4 +43,8 @@ def create_app(config_name="default"):
         from .feedback import feedback_blueprint
         app.register_blueprint(feedback_blueprint)
 
+        from .todo.api import todo_api_blueprint
+        api.register_blueprint(todo_api_blueprint)
+
+        app.register_blueprint(api)
     return app
