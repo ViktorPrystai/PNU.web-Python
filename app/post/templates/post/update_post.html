@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block css %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/updatestyle.css') }}">
+{% endblock %}
+{% block content %}
+    {% from "macros.html" import render_field %}
+    <div class="centered2 p-4">
+        <div class="update-post-container">
+            <h2>Update page</h2>
+            <form action="{{ url_for('.update_post', id=post.id) }}" method="post" class="row g-3" enctype="multipart/form-data" novalidate>
+                {{ form.hidden_tag() }}<br>
+                {{ render_field(form.title) }}<br>
+                {{ render_field(form.text) }}<br>
+                {{ render_field(form.image) }}<br>
+                {{ render_field(form.type) }}<br>
+                {{ render_field(form.category) }}<br>
+                {{ render_field(form.tags) }}<br>
+                <div class="form-group list-c">
+                    {{ form.submit(class="btn btn-primary mb-3 bg-dark") }}
+                </div>
+            </form>
+        </div>
+
+        <h2 class="list-c">List of Categories</h2>
+        <ul>
+            {% for category in categories %}
+                <h3><li>{{ category.name }}</li></h3>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+

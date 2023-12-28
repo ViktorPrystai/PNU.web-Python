@@ -49,5 +49,8 @@ def create_app(config_name="default"):
         from .todo.api import todo_api_blueprint
         api.register_blueprint(todo_api_blueprint)
 
+        from .post import post_bp
+        app.register_blueprint(post_bp)
+
         app.register_blueprint(api)
     return app

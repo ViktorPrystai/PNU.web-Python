@@ -1,0 +1,76 @@
+
+/* Стилі для заголовка */
+h2.post-title {
+  color: #333;
+  font-size: 24px;
+}
+
+/* Стилі для зображення */
+img.post-image {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+
+/* Стилі для основного тексту */
+p.post-text {
+  color: #666;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Стилі для дати, імені користувача та інших елементів */
+p.post-created, p.post-tags, p.post-category {
+  font-style: italic;
+}
+
+/* Додаткові стилі для краси */
+div.post-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px; /* Максимальна ширина контейнера */
+  margin: 0 auto; /* Центрування контейнера */
+}
+
+/* Стилі для кнопки редагування та форми видалення (якщо користувач аутентифікований) */
+button.post-edit-btn a, form.post-delete-form {
+  display: inline-block; /* Розташування в рядок, а не в блок */
+}
+
+/* Стилі для кнопки редагування поста */
+.post-edit-btn {
+  background-color: #007bff; /* Колір фону кнопки */
+  color: #fff; /* Колір тексту на кнопці */
+  border: 1px solid #007bff; /* Обводка кнопки */
+  padding: 8px 16px; /* Відступи всередині кнопки */
+  text-decoration: none; /* Відміна стилізації текстового посилання */
+  border-radius: 4px; /* Радіус кутів кнопки */
+  transition: background-color 0.3s ease; /* Плавний перехід кольору фону */
+}
+
+.post-edit-btn:hover {
+  background-color: #0056b3; /* Змінюємо колір фону при наведенні курсора */
+}
+
+/* Стилі для кнопки видалення поста */
+.post-delete-btn {
+  background-color: #dc3545; /* Колір фону кнопки */
+  color: #fff; /* Колір тексту на кнопці */
+  border: 1px solid #dc3545; /* Обводка кнопки */
+  padding: 8px 16px; /* Відступи всередині кнопки */
+  text-decoration: none; /* Відміна стилізації текстового посилання */
+  border-radius: 4px; /* Радіус кутів кнопки */
+  transition: background-color 0.3s ease; /* Плавний перехід кольору фону */
+}
+
+.post-delete-btn:hover {
+  background-color: #c82333; /* Змінюємо колір фону при наведенні курсора */
+}
+.post-link {
+  color: #ffffff;
+}
+.post-link:hover {
+  color: #ffffff;
+}

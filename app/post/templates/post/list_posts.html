@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block css %}
+    {{ super() }}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/liststyle.css') }}">
+{% endblock %}
+{% block content %}
+    <div class="container p-4">
+        <h2 class="my-4">Posts list</h2>
+        <ul class="post-list">
+            {% for post in posts.items %}
+                <li class="post-item">
+                    <h4><a href="{{ url_for('.view_post', id=post.id) }}">{{ post.title }}</a> - {{ post.type }} - {{ post.enabled }}</h4>
+                </li>
+            {% endfor %}
+        </ul>
+        <nav aria-label="">
+            <ul class="pagination justify-content-center">
+                {% if posts.has_prev %}
+                    <li class="page-item"><a class="page-link" href="{{ url_for('.list_posts', page=posts.prev_num) }}">Previous</a></li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                {% endif %}
+
+                {% for num in posts.iter_pages() %}
+                    {% if num == posts.page %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                       <li class="page-item"><a class="page-link" href="{{ url_for('.list_posts', page=num) }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if posts.has_next %}
+                    <li class="page-item"><a class="page-link" href="{{ url_for('.list_posts', page=posts.next_num) }}">Next</a></li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+{% endblock %}
+
+
+
+

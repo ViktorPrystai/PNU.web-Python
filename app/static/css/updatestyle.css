@@ -1,0 +1,42 @@
+/* Стилі для контейнера форми оновлення поста */
+.update-post-container {
+    max-width: 600px; /* Максимальна ширина контейнера */
+    margin: 0 auto;/* !* Вирівнювання по центру *!*/
+    background-color: #f9f9f9; /* Колір фону */
+    padding: 20px; /* Внутрішні відступи */
+    border-radius: 10px; /* Радіус кутів */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Тінь контейнера */
+}
+
+/* Стилі для полів форми */
+.form-control {
+    margin-bottom: 1px; /* Відступ між полями */
+    padding: 9px; /* Внутрішні відступи для всіх полів форми */
+}
+
+/* Стилі для кнопки відправки форми */
+.btn-primary {
+    background-color: #007bff; /* Колір фону кнопки */
+    color: #fff; /* Колір тексту на кнопці */
+    border: 1px solid #007bff; /* Обводка кнопки */
+    padding: 10px 20px; /* Відступи всередині кнопки */
+    border-radius: 5px; /* Радіус кутів кнопки */
+    transition: background-color 0.3s ease; /* Плавний перехід кольору фону */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Змінюємо колір фону при наведенні курсора */
+}
+ul {
+    text-align: center; /* Вирівнювання тексту по центру */
+    list-style-type: none; /* Видалення маркерів списку */
+    padding: 0; /* Видалення внутрішніх відступів у списку */
+}
+
+/* Стилі для елементів списку категорій */
+ul h3 {
+    margin: 0;
+}
+.list-c {
+    text-align: center;
+}

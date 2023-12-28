@@ -13,7 +13,7 @@ class Config(object):
 class DevConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
-    WTF_CSRF_ENABLED = True
+    WTF_CSRF_ENABLED = True # при тестуванні false
     SESSION_PERMANENT = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + path.join(basedir, 'instance/feedbacks.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container p-4">
+    <h2>List of Categories</h2>
+    <ul>
+        {% for category in categories %}
+            <h3><li>{{ category.name }}</li></h3>
+        {% endfor %}
+    </ul>
+    <h2><a href="{{ url_for('.create_category') }}">Create new category</a></h2>
+    <h2><a href="{{ url_for('.delete_category') }}">Delete category</a></h2>
+</div>
+{% endblock %}

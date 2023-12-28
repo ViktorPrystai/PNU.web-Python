@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block css %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/create_cat.css') }}">
+{% endblock %}
+{% block content %}
+    {% from "macros.html" import render_field %}
+    <div class="centered2 p-4">
+        <h2>Category page</h2>
+        <form action="{{ url_for('.create_category') }}" method="post" class="row g-3" enctype="multipart/form-data" novalidate>
+            <div class="form-outline">
+                {{ form.hidden_tag() }}
+                {{ render_field(form.name) }}<br>
+                {{ form.submit(class="btn btn-primary mb-3 bg-dark")}}
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
