@@ -1,0 +1,16 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: seanwasere@gmail.com
+  description: sean
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: Seans-Python3-Flask-Rest-Boilerplate
+  version: 1.0.0
+servers:
+- url: /
+paths: {}
+components:
+  schemas: {}
+

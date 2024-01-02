@@ -4,11 +4,13 @@ from flask_migrate import Migrate
 from flask import Flask, redirect, url_for, Blueprint
 from flask_login import LoginManager
 from config import config
+from flask_marshmallow import Marshmallow
 
 bcrypt = Bcrypt()
 migrate = Migrate()
 db = SQLAlchemy()
 login_manager = LoginManager()
+ma = Marshmallow()
 
 
 def create_app(config_name="default"):
@@ -51,6 +53,12 @@ def create_app(config_name="default"):
 
         from .post import post_bp
         app.register_blueprint(post_bp)
+
+        from .user_api import users_api_bp
+        app.register_blueprint(users_api_bp)
+
+        from .swagger import swagger_bp
+        app.register_blueprint(swagger_bp)
 
         app.register_blueprint(api)
     return app
