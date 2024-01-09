@@ -27,8 +27,17 @@ class ProdConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + path.join(basedir, 'instance/feedbacks.db')
 
 
+class TestConfig(Config):
+    DEVELOPMENT = True
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + path.join(basedir, 'instance/feedbacks_test.db')
+    WTF_CSRF_ENABLED = False
+
+
 config = {
     'dev': DevConfig,
     'prod': ProdConfig,
     'default': DevConfig,
+    'test': TestConfig
+
 }
