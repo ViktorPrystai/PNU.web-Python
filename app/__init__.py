@@ -60,5 +60,8 @@ def create_app(config_name="default"):
         from .swagger import swagger_bp
         app.register_blueprint(swagger_bp)
 
+        from .game import games_api_bp
+        app.register_blueprint(games_api_bp)
+
         app.register_blueprint(api)
     return app

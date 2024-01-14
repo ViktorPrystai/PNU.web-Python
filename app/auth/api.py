@@ -51,6 +51,29 @@ def required_token(f):
     return decorated
 
 
+def required_token_restful(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get("Authorization")
+        jwt_error = None
+
+        if not token:
+            return {
+                "errorMessage": "Token is missing",
+            }, 401
+        try:
+            jwt.decode(token, current_app.config["SECRET_KEY"], algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            jwt_error = "Token is expired."
+        except jwt.InvalidTokenError:
+            jwt_error = "Invalid token"
+        if jwt_error:
+            return {"errorMessage": str(jwt_error)}, 401
+
+        return f(*args, **kwargs)
+
+    return decorated
+
 @auth_api_blueprint.route('/ping' , methods= ["GET", "POST"])
 @required_token
 def ping():
