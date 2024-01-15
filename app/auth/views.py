@@ -116,7 +116,7 @@ def after_request(response):
              flash('Error while update user last seen!', 'danger')
         return response
 
-@auth_blueprint.route("/logout")
+@auth_blueprint.route("/logout", methods=['GET','POST'])
 def logout():
     logout_user()
     flash('You have been logged out', 'success')

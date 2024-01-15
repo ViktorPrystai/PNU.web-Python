@@ -39,7 +39,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     text = db.Column(db.String)
-    image = db.Column(db.String, default='static/img')
+    image = db.Column(db.String, default='postimg/default.jpg')
     created = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
     type = db.Column(db.Enum(Type), default='news', nullable=False)
     enabled = db.Column(db.Boolean, default=True, nullable=False)

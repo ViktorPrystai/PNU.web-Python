@@ -19,22 +19,22 @@ def create_post():
             unique_filename = f"{int(time.time())}_{filename}.jpg"
             file_path = f'postimg/{unique_filename}'
             profile_image.save(f'app/static/{file_path}')
-            tags = form.tags.data.split(',')
-            tags = [tag.strip() for tag in tags if tag]
-            category_id = form.category.data
-            category = Category.query.get(category_id)
-            new_post = Post(
-                title=form.title.data,
-                text=form.text.data,
-                type=form.type.data,
-                image=file_path if profile_image else None,
-                user_id=current_user.id,
-                category=category,
-                tags=[Tag.get_or_create(tag) for tag in tags]
-            )
-            db.session.add(new_post)
-            db.session.commit()
-            return redirect(url_for('post.list_posts'))
+        tags = form.tags.data.split(',')
+        tags = [tag.strip() for tag in tags if tag]
+        category_id = form.category.data
+        category = Category.query.get(category_id)
+        new_post = Post(
+            title=form.title.data,
+            text=form.text.data,
+            type=form.type.data,
+            image=file_path if profile_image else None,
+            user_id=current_user.id,
+            category=category,
+            tags=[Tag.get_or_create(tag) for tag in tags]
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect(url_for('post.list_posts'))
     return render_template('post/create_post.html', form=form, categories=categories)
 
 
